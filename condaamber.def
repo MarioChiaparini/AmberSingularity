@@ -1,0 +1,48 @@
+Bootstrap: docker
+From: ubuntu:latest
+
+%help
+    Container with Anaconda 2 (Conda 4.5.11 Canary) and Ambertools 22 for Debian 9.x (Stretch).
+    This installation is based on Python 2.7.15
+
+
+%setup
+    cd /
+    touch .condarc
+
+%post
+    
+    echo 'export RANDOM=123456' >>$SINGULARITY_ENVIRONMENT
+    
+    #Installing all dependencies
+    
+    apt-get update && apt-get -y upgrade
+    apt-get -y install \
+    build-essential \
+    wget \
+    bzip2 \
+    ca-certificates \
+    libglib2.0-0 \
+    libxext6 \
+    libsm6 \
+    libxrender1 \
+    git
+    rm -rf /var/lib/apt/lists/*
+    apt-get clean
+    
+    #Installing Anaconda 2 and Conda 4.5.11
+    
+    wget -c https://repo.continuum.io/archive/Anaconda2-5.3.0-Linux-x86_64.sh
+    /bin/bash Anaconda2-5.3.0-Linux-x86_64.sh -bfp /usr/local
+    echo ". /usr/local/etc/profile.d/conda.sh" >> ~/.bashrc
+    #ln -s /usr/local/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+    #Conda configuration of channels from .condarc file
+    conda create --name AmberTools22
+    conda activate /usr/local/envs/AmberTools22 
+    conda install -c conda-forge ambertools=22 compilers
+    conda update -c conda-forge ambertools
+    conda update conda
+    conda update -n base -c defaults conda
+    
+    #List installed environments
+    conda list

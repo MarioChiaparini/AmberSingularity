@@ -1,5 +1,5 @@
-Bootstrap: docker 
-From: ubuntu:xenial
+Bootstrap: library 
+From: ubuntu:18.04
 
 #Debian
 
@@ -40,7 +40,7 @@ apt -y install tcsh make \
 
 wget https://ambermd.org/downloads/amber_amd.23jun22.tar.bz2 
 
-tar -xvjz amber_amd.23jun22.tar.bz2 
+tar -xvjz  mber_amd.23jun22.tar.bz2
 
 apt -y install openmpi-bin libopenmpi-dev openssh-client 
 
@@ -52,4 +52,5 @@ apt -y install openmpi-bin libopenmpi-dev openssh-client
         echo "Container base is not Ubuntu."
         exit 1
     fi
+
 

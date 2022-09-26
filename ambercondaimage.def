@@ -1,0 +1,68 @@
+Bootstrap: library
+From: debian:9 
+
+#Ubuntu
+
+%environment
+
+#wget https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh
+
+#bash Miniconda3-latest-Linux-x86_64.sh -b -f -p /miniconda3/
+
+#bash Anaconda-latest-Linux-x86_64.sh -b -f -p /anaconda3/
+
+#rm -rf Miniconda3-latest-Linux-x86_64.sh
+
+#rm -rf Anaconda-latest-Linux-x86_64.sh
+
+#wget -c https://repo.continuum.io/archive/Anaconda2-5.3.0-Linux-x86_64.sh
+
+#bash Anaconda2-5.3.0-Linux-x86_64.sh -bfp /usr/local
+
+#export PATH="/miniconda3/bin:$PATH"
+
+#/bin/bash Anaconda2-5.3.0-Linux-x86_64.sh -bfp /usr/local
+
+
+%runscript
+
+exec vcontact "$@"
+
+%post 
+
+#/bin/apt-get install wget
+
+/bin/wget -c https://repo.continuum.io/archive/Anaconda2-5.3.0-Linux-x86_64.sh
+
+/bin/bash Anaconda2-5.3.0-Linux-x86_64.sh -bfp /usr/local
+
+conda config --file /.condarc --add channels defaults
+
+conda config --file /.condarc --add channels conda-forge
+
+conda update conda
+
+conda create --name AmberTools22
+
+conda activate AmberTools22
+
+conda install -c conda-forge ambertools=22 compilers
+
+conda update -c conda-forge ambertools
+
+# sudo apt-get install tcsh make \
+#               gcc gcc-gfortran gcc-c++ \
+#               which flex bison patch bc \
+#               libXt-devel libXext-devel \
+#               perl perl-ExtUtils-MakeMaker util-linux wget \
+#               bzip2 bzip2-devel zlib-devel tar
+
+%test
+    grep -q NAME=\"Debian\" /etc/os-release
+    if [ $? -eq 0 ]; then
+        echo "Container base is Ubuntu as expected."
+    else
+        echo "Container base is not Ubuntu."
+        exit 1
+    fi
+
